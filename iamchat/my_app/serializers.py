@@ -28,3 +28,13 @@ class SlideSerializer(serializers.ModelSerializer):
                 del representation[key]
 
         return representation
+
+
+class GenerateSlideInputSerializer(serializers.Serializer):
+    keyword = serializers.CharField(help_text="Ключевое слово для генерации слайдов")
+    count = serializers.IntegerField(
+        help_text="Количество слайдов (1 или 2)",
+        min_value=1,
+        max_value=2,
+        default=1
+    )

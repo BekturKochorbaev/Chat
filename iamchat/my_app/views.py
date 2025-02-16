@@ -1,8 +1,8 @@
 from rest_framework.views import APIView
 from rest_framework.response import Response
 from rest_framework import status
-from .models import BotResponse
-from .serializers import BotResponseSerializer
+from .models import *
+from .serializers import *
 
 class WebSocketInfoView(APIView):
     """
@@ -26,18 +26,28 @@ from django.http import JsonResponse
 from rest_framework.decorators import api_view
 from rest_framework.response import Response
 import requests
-from .models import Slide  # Импортируем модель
-from .serializsers import SlideSerializer
+from drf_yasg.utils import swagger_auto_schema
 
-API_AI = "https://6663-217-29-24-178.ngrok-free.app/v1/chat/completions"
+
+API_AI = "https://89f7-217-29-24-178.ngrok-free.app/v1/chat/completions"
 PEXELS_API_KEY = "8BgJ7ceLcIpWfBHk76gykWAN7Q1yQe7htIjcVpUP0wNmdXad3pi0ehai"
 
 
+@swagger_auto_schema(
+    method='post',
+    request_body=GenerateSlideInputSerializer,
+    responses={200: "Слайды успешно сгенерированы"}
+)
+
 @api_view(['POST'])
 def generate_slide(request):
-    # Получаем ключевое слово и количество слайдов от пользователя
-    keyword = request.data.get('keyword', 'IT')
-    count = request.data.get('count', 1)  # По умолчанию 1 слайд
+    # Валидация входных данных
+    input_serializer = GenerateSlideInputSerializer(data=request.data)
+    input_serializer.is_valid(raise_exception=True)
+
+    keyword = input_serializer.validated_data['keyword']
+    count = input_serializer.validated_data['count']
+
 
     # Генерация данных для первого слайда (первый шаблон)
     def generate_first_slide(keyword):
