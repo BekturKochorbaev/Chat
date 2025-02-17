@@ -276,7 +276,7 @@ import httpx
 from asgiref.sync import sync_to_async
 from django.apps import apps
 
-API_URL = "https://e5bf-217-29-24-178.ngrok-free.app"
+API_URL = "https://2dd0-217-29-24-178.ngrok-free.app/v1/chat/completions"
 
 class ChatConsumer(AsyncWebsocketConsumer):
     def __init__(self, *args, **kwargs):
@@ -321,10 +321,12 @@ class ChatConsumer(AsyncWebsocketConsumer):
             serializer = self.MessageSerializer(data={"message": message})
             if serializer.is_valid():
                 payload = {
-                    "model": "Qwen/Qwen2.5-3B-Instruct",  # Используем правильную модель
+                    "model": "models/Qwen/Qwen2.5-3B-Instruct",  # Используем правильную модель
                     "messages": [
+                        {"role": "system", "content": "You are a helpful assistant."},  # Системное сообщение
                         {"role": "user", "content": message}  # Вставляем сообщение пользователя
                     ],
+                    "max_tokens": 2048,  # Устанавливаем максимальное количество токенов
                     "stream": True  # Устанавливаем флаг stream, если это необходимо
                 }
                 headers = {"Content-Type": "application/json"}
@@ -384,4 +386,3 @@ class ChatConsumer(AsyncWebsocketConsumer):
             self.queue.task_done()
 
         self.processing = False
-

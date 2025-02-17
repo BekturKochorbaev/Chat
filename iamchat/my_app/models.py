@@ -1,5 +1,6 @@
 from django.db import models
 
+
 class BotResponse(models.Model):
     message = models.TextField()
     response = models.TextField()
@@ -8,11 +9,21 @@ class BotResponse(models.Model):
     def __str__(self):
         return f"Message: {self.message} - Response: {self.response}"
 
-class Slide(models.Model):
-    group_id = models.IntegerField(verbose_name="ID группы", null=True, blank=True)
+
+class SlideFirst(models.Model):
     keyword = models.CharField(max_length=255, verbose_name="Ключевое слово")
     title = models.CharField(max_length=255, verbose_name="Заголовок")
     description = models.TextField(verbose_name="Описание", blank=True, null=True)
+    image_url = models.URLField(verbose_name="URL изображения")
+    created_at = models.DateTimeField(auto_now_add=True, verbose_name="Дата создания")
+
+    def __str__(self):
+        return f"SlideFirst: {self.keyword} ({self.created_at})"
+
+
+class Slide(models.Model):
+    keyword = models.CharField(max_length=255, verbose_name="Ключевое слово")
+    title = models.CharField(max_length=255, verbose_name="Заголовок")
     subtitle_1 = models.CharField(max_length=255, verbose_name="Подзаголовок 1", blank=True, null=True)
     description_1 = models.TextField(verbose_name="Описание 1", blank=True, null=True)
     subtitle_2 = models.CharField(max_length=255, verbose_name="Подзаголовок 2", blank=True, null=True)
@@ -26,7 +37,3 @@ class Slide(models.Model):
 
     def __str__(self):
         return f"Slide: {self.keyword} ({self.created_at})"
-
-    class Meta:
-        verbose_name = "Слайд"
-        verbose_name_plural = "Слайды"

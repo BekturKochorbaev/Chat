@@ -13,22 +13,6 @@ class BotResponseSerializer(serializers.ModelSerializer):
         model = BotResponse
         fields = ['response', 'created_at']
 
-class SlideSerializer(serializers.ModelSerializer):
-    class Meta:
-        model = Slide
-        fields = '__all__'
-
-    def to_representation(self, instance):
-        # Получаем стандартное представление объекта
-        representation = super().to_representation(instance)
-
-        # Удаляем поля с null значениями
-        for key in list(representation.keys()):
-            if representation[key] is None:
-                del representation[key]
-
-        return representation
-
 
 class GenerateSlideInputSerializer(serializers.Serializer):
     keyword = serializers.CharField(help_text="Ключевое слово для генерации слайдов")
@@ -38,3 +22,15 @@ class GenerateSlideInputSerializer(serializers.Serializer):
         max_value=2,
         default=1
     )
+
+
+class SlideFirstSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = SlideFirst
+        fields = '__all__'
+
+
+class SlideSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Slide
+        fields = '__all__'
